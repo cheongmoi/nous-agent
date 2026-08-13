@@ -146,10 +146,11 @@ async def _run(args: argparse.Namespace) -> int:
     agent = Agent(options)
     agent.subscribe(_Renderer(args.mode))
 
-    if session:
+    active_session = session
+    if active_session is not None:
         async def persist(event: AgentEvent, _signal: Any) -> None:
             if event["type"] == "message_end":
-                session.append(event["message"])
+                active_session.append(event["message"])
 
         agent.subscribe(persist)
 
